@@ -1,0 +1,66 @@
+.homer {
+    width:310px;
+    height:310px;
+}
+
+@media screen
+    and (min-width: 1600px) {
+
+    .homer {
+        background: url("homer.jpg") 0px 0px;
+    }
+}
+
+@media screen
+    and (min-width: 1400px) 
+    and (max-width: 1600px) {
+
+    .homer {
+        background: url("homer.jpg") 310px 0px;
+    }
+}
+
+@media screen
+    and (min-width: 1200px) 
+    and (max-width: 1400px) {
+
+    .homer {
+        background: url("homer.jpg") 0px -317px;
+    }
+}
+
+@media screen
+    and (min-width: 1000px)
+    and (max-width: 1200px) {
+
+    .homer {
+        background: url("homer.jpg") 317px -317px;
+    }
+}
+
+@media screen
+    and (min-width: 800px)
+    and (max-width: 1000px) {
+
+    .homer {
+        background: url("homer.jpg") 0px -317px;
+    }
+}
+
+@media screen
+    and (min-width: 600px)
+    and (max-width: 800px) {
+
+    .homer {
+        background: url("homer.jpg") 317px 0px;
+    }
+}
+
+@media screen
+    and (max-width: 600px) {
+
+    .homer {
+        background: url("homer.jpg") 0px 0px;
+    }
+}
+
