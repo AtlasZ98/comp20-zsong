@@ -1,0 +1,19 @@
+h1 {
+	color: #808000;
+	font-family: 'Open Sans Condensed', sans-serif;
+	font-size: 27px; 
+	font-weight: bold; 
+	letter-spacing: -1px; 
+	line-height: 1; 
+	text-align: center;
+}
+
+video {
+	display: block;
+	margin: 0 auto;
+}
+
+#lyrics {
+	color: #808000;
+	text-align: center;
+}
