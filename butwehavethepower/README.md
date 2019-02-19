@@ -1,4 +1,4 @@
-#Lab 5: Union Strike Folk Song
+# Lab 5: Union Strike Folk Song
 
 All the required work has been done according to the spec.
 
