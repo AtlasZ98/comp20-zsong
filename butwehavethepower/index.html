@@ -16,9 +16,7 @@
 	<script type="text/javascript">
 
   		var video = document.getElementsByTagName("video")[0];
-  		console.log(video);
   		var lyrics = document.getElementById("lyrics");
-  		console.log(lyrics);
 		video.addEventListener("timeupdate", function() {
 			if (video.play) {
 				if (video.currentTime > 1.5 && video.currentTime < 6) {
