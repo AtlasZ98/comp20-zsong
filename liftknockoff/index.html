@@ -3,7 +3,7 @@
 <html>
 
     <head>
-        <title>Geolocation Map Example</title>
+        <title>The Private Car Service</title>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9sQaGQMUn1TEZG3C11LjRlpQAppS4WGk"></script>
         <link rel="stylesheet" href="style.css" />
@@ -37,13 +37,11 @@
             }
             function renderMap() {
                 myPosition = new google.maps.LatLng(myLat, myLng);
-                // Update map and go there...
                 map.panTo(myPosition);
                 
-                // Create a marker
                 marker = new google.maps.Marker({
                     position: myPosition,
-                    title: "The Weinermobile is"
+                    title: "The Weinermobile is X miles away from me!"
                 });
                 marker.setMap(map);
                     
