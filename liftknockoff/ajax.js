@@ -31,8 +31,9 @@
     function renderMap() {
         myPosition = new google.maps.LatLng(myLat, myLng);
         map.panTo(myPosition);
-        
+
         marker = new google.maps.Marker({
+            icon: "icons/me.png",
             position: myPosition,
             title: "The Weinermobile is X miles away from me!"
         });
