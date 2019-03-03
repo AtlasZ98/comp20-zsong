@@ -1,10 +1,9 @@
 var myLat = 0;
 var myLng = 0;
 var myLatlng;
+var myPosition;
 var nearest_mile = 0;
 var METER_TO_MILES = 1609.34;
-
-var myPosition = new google.maps.LatLng(myLat, myLng);
 
 var myOptions = {
     zoom: 15,
@@ -16,7 +15,7 @@ var map;
 var request = new XMLHttpRequest();
 
 var weinermobile_status = "The Weinermobile is nowhere to be seen.";
-var nearest_vehicle = "There is no other vehicle near me.";
+var nearest_vehicle = "There is no other vehicle.";
 
 function init() {
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
@@ -34,7 +33,7 @@ function getLocations() {
         });
     }
     else {
-        alert("Geolocation is not supported by your web browser.");
+        alert("Pity. Geolocation is not supported by your web browser.");
     }
 }
 
@@ -49,12 +48,13 @@ function renderMap() {
     });
     myMarker.setMap(map);
         
-    var infowindow = new google.maps.InfoWindow();
+    var myInfowindow = new google.maps.InfoWindow();
     myMarker.addListener('click', function() {
-        infowindow.setContent(weinermobile_status + "<br />" + nearest_vehicle);
-        infowindow.open(map, myMarker);
+        myInfowindow.setContent(weinermobile_status + "<br />" + nearest_vehicle);
+        myInfowindow.open(map, myMarker);
     });
 }
+
 
 function getOtherLocations() {
     request.open("POST", "https://hans-moleman.herokuapp.com/rides", true);
@@ -67,7 +67,6 @@ function getOtherLocations() {
             var vLatlngs = new Array([arr.vehicles.length]);
             var infowindows = new Array([arr.vehicles.length]);
 
-            console.log(arr);
             for (var i in arr.vehicles) {
                 vLatlngs[i] = new google.maps.LatLng(arr.vehicles[i].lat, arr.vehicles[i].lng);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(myLatlng, vLatlngs[i]) / METER_TO_MILES;
@@ -79,7 +78,6 @@ function getOtherLocations() {
                         position: vLatlngs[i],
                     });
                     markers[i].setMap(map);
-
                 } else {
                     markers[i] = new google.maps.Marker({
                         icon: "icons/passenger.png",
@@ -90,7 +88,6 @@ function getOtherLocations() {
                         nearest_mile = distance;
                         nearest_vehicle = "The neareset vehicles is " + nearest_mile + " away.";
                     }
-  
                 }
                 markers[i].addListener('click', function() {
                     infowindows[i] = new google.maps.InfoWindow();
@@ -100,7 +97,6 @@ function getOtherLocations() {
             }
 
         }
-
 
         else if (request.readyState == 4 && request.status != 200) {
             alert("Server responded with a bad status code!")
