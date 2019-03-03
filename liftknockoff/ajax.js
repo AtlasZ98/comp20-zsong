@@ -17,6 +17,7 @@ var request = new XMLHttpRequest();
 var weinermobile_status = "The Weinermobile is nowhere to be seen.";
 var nearest_vehicle = "There is no other vehicle.";
 
+
 function init() {
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     getLocations();
@@ -70,7 +71,6 @@ function getOtherLocations() {
             for (var i in arr.vehicles) {
                 vLatlngs[i] = new google.maps.LatLng(arr.vehicles[i].lat, arr.vehicles[i].lng);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(myLatlng, vLatlngs[i]) / METER_TO_MILES;
-
                 if (arr.vehicles[i].username == "WEINERMOBILE") {
                     weinermobile_status = "The Weinermobile is " + distance + " miles from me !";
                     markers[i] = new google.maps.Marker({
@@ -80,7 +80,7 @@ function getOtherLocations() {
                     markers[i].setMap(map);
                 } else {
                     markers[i] = new google.maps.Marker({
-                        icon: "icons/passenger.png",
+                        icon: "icons/vehicle.png",
                         position: vLatlngs[i],
                     });
                     markers[i].setMap(map);
