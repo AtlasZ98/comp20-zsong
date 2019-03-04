@@ -2,9 +2,9 @@ var myLat = 0;
 var myLng = 0;
 var myLatlng;
 var myPosition;
-var nearest_mile = 0;
+var nearest_mile = Number.MAX_SAFE_INTEGER;
 var METER_TO_MILES = 1609.34;
-
+var myUsername = "I'm pCH9E2zt. ";
 var myOptions = {
     zoom: 15,
     center: myPosition,
@@ -13,7 +13,7 @@ var myOptions = {
 var map;
 
 var request = new XMLHttpRequest();
-
+var infowindow = new google.maps.InfoWindow();
 var weinermobile_status = "The Weinermobile is nowhere to be seen.";
 var nearest_vehicle = "There is no other vehicle.";
 
@@ -48,11 +48,10 @@ function renderMap() {
         position: myPosition,
     });
     myMarker.setMap(map);
-        
-    var myInfowindow = new google.maps.InfoWindow();
+
     myMarker.addListener('click', function() {
-        myInfowindow.setContent(weinermobile_status + "<br />" + nearest_vehicle);
-        myInfowindow.open(map, myMarker);
+        infowindow.setContent(myUsername + nearest_vehicle + "<br />" + weinermobile_status);
+        infowindow.open(map, myMarker);
     });
 }
 
@@ -64,40 +63,47 @@ function getOtherLocations() {
         if (request.readyState == 4 && request.status == 200) {
             data = request.responseText;
             var arr = JSON.parse(data);
-            var markers = new Array([arr.vehicles.length]);
-            var vLatlngs = new Array([arr.vehicles.length]);
-            var infowindows = new Array([arr.vehicles.length]);
+            var role_name;
+            var roles;
+            var role_icon;
 
-            for (var i in arr.vehicles) {
-                vLatlngs[i] = new google.maps.LatLng(arr.vehicles[i].lat, arr.vehicles[i].lng);
+            if ("vehicles" in arr) {
+                role_name = "vehicle";
+                roles = arr.vehicles;
+                role_icon = "icons/vehicle.png";
+            } else if ("passengers" in arr) {
+                role_name = "passenger";
+                roles = arr.passengers;
+                role_icon = "icons/passenger.png";
+            } else {
+                alert("JSON data is wrong!")
+            };
+
+            var markers = new Array([roles.length]);
+            var vLatlngs = new Array([roles.length]);
+
+            for (var i in roles) {
+                vLatlngs[i] = new google.maps.LatLng(roles[i].lat, roles[i].lng);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(myLatlng, vLatlngs[i]) / METER_TO_MILES;
-                if (arr.vehicles[i].username == "WEINERMOBILE") {
-                    weinermobile_status = "The Weinermobile is " + distance + " miles from me !";
-                    markers[i] = new google.maps.Marker({
-                        icon: "icons/weinermobile.png",
-                        position: vLatlngs[i],
-                        info: "This vehicle is " + arr.vehicles[i].username + ".<br /> It is " + distance + " miles from me."
-                    });
-                    markers[i].setMap(map);
-                } else {
-                    markers[i] = new google.maps.Marker({
-                        icon: "icons/vehicle.png",
-                        position: vLatlngs[i],
-                        info: "This vehicle is " + arr.vehicles[i].username + ".<br /> It is " + distance + " miles from me."
-                    });
-                    markers[i].setMap(map);
-                    if (distance > nearest_mile) {
-                        nearest_mile = distance;
-                        nearest_vehicle = "The neareset vehicles is " + nearest_mile + " away.";
-                    }
-                }
-                infowindows[i] = new google.maps.InfoWindow({
-                    contnet: "This vehicle is " + arr.vehicles[i].username + ".<br /> It is " + distance + " miles from me."
+                markers[i] = new google.maps.Marker({
+                    icon: role_icon,
+                    position: vLatlngs[i],
+                    name: roles[i].username,
+                    info: "This " + role_name + " is " + roles[i].username + 
+                            ".<br /> It is " + distance + " miles from me."
                 });
-
+                markers[i].setMap(map);
+                if ((distance < nearest_mile) && (roles[i].username != "WEINERMOBILE")) {
+                    nearest_mile = distance;
+                    nearest_vehicle = "The neareset " + role_name + " is " + nearest_mile + " away.";
+                }
+                if (roles[i].username == "WEINERMOBILE") {
+                    weinermobile_status = "The Weinermobile is " + distance + " miles from me !";
+                    markers[i].icon = "icons/weinermobile.png";
+                }
                 google.maps.event.addListener(markers[i], 'click', function() {
-                    infowindows[i].setContent(this.info);
-                    infowindows[i].open(map, this);
+                    infowindow.setContent(this.info);
+                    infowindow.open(map, this);
                 });
             }
 
