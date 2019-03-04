@@ -76,12 +76,14 @@ function getOtherLocations() {
                     markers[i] = new google.maps.Marker({
                         icon: "icons/weinermobile.png",
                         position: vLatlngs[i],
+                        info: "This vehicle is " + arr.vehicles[i].username + ".<br /> It is " + distance + " miles from me."
                     });
                     markers[i].setMap(map);
                 } else {
                     markers[i] = new google.maps.Marker({
                         icon: "icons/vehicle.png",
                         position: vLatlngs[i],
+                        info: "This vehicle is " + arr.vehicles[i].username + ".<br /> It is " + distance + " miles from me."
                     });
                     markers[i].setMap(map);
                     if (distance > nearest_mile) {
@@ -89,10 +91,13 @@ function getOtherLocations() {
                         nearest_vehicle = "The neareset vehicles is " + nearest_mile + " away.";
                     }
                 }
-                markers[i].addListener('click', function() {
-                    infowindows[i] = new google.maps.InfoWindow();
-                    infowindows[i].setContent("This vehicle is " + arr.vehicles[i].username + ".<br /> It is " + distance + " miles from me.");
-                    infowindows[i].open(map, markers[i]);
+                infowindows[i] = new google.maps.InfoWindow({
+                    contnet: "This vehicle is " + arr.vehicles[i].username + ".<br /> It is " + distance + " miles from me."
+                });
+
+                google.maps.event.addListener(markers[i], 'click', function() {
+                    infowindows[i].setContent(this.info);
+                    infowindows[i].open(map, this);
                 });
             }
 
