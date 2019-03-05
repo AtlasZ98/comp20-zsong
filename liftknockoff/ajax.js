@@ -4,7 +4,7 @@ var myLatlng;
 var myPosition;
 var nearest_mile = Number.MAX_SAFE_INTEGER;
 var METER_TO_MILES = 1609.34;
-var myUsername = "I'm pCH9E2zt. ";
+var myUsername = "pCH9E2zt";
 var myOptions = {
     zoom: 15,
     center: myPosition,
@@ -15,7 +15,7 @@ var map;
 var request = new XMLHttpRequest();
 var infowindow = new google.maps.InfoWindow();
 var weinermobile_status = "The Weinermobile is nowhere to be seen.";
-var nearest_vehicle = "There is no other vehicle.";
+var nearest_role = "There is no other vehicle/passenger.";
 
 
 function init() {
@@ -50,7 +50,7 @@ function renderMap() {
     myMarker.setMap(map);
 
     myMarker.addListener('click', function() {
-        infowindow.setContent(myUsername + nearest_vehicle + "<br />" + weinermobile_status);
+        infowindow.setContent("I'm " + myUsername + " ." + nearest_role + "<br />" + weinermobile_status);
         infowindow.open(map, myMarker);
     });
 }
@@ -113,7 +113,7 @@ function getOtherLocations() {
             alert("Server responded with a bad status code!")
         }
     };
-    request.send("username=pCH9E2zt&lat=" + myLat + "&lng=" + myLng);
+    request.send("username=" + myUsername + "&lat=" + myLat + "&lng=" + myLng);
 }
 
 
