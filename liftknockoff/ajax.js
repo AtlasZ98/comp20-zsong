@@ -98,6 +98,7 @@ function getOtherLocations() {
                     nearest_role = "The neareset " + role_name + " is " + nearest_mile + " away.";
                 }
                 if (roles[i].username == "WEINERMOBILE") {
+					markers[i].info = "This is " + roles[i].username + ".<br /> It is " + distance + " miles from me.";
                     weinermobile_status = "The Weinermobile is " + distance + " miles from me !";
                     markers[i].icon = "icons/weinermobile.png";
                 }
