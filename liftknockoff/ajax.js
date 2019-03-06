@@ -45,7 +45,7 @@ function renderMap() {
 
     var myMarker = new google.maps.Marker({
         icon: "icons/me.png",
-        position: myPosition,
+        position: myPosition
     });
     myMarker.setMap(map);
 
@@ -95,7 +95,7 @@ function getOtherLocations() {
                 markers[i].setMap(map);
                 if ((distance < nearest_mile) && (roles[i].username != "WEINERMOBILE")) {
                     nearest_mile = distance;
-                    nearest_vehicle = "The neareset " + role_name + " is " + nearest_mile + " away.";
+                    nearest_role = "The neareset " + role_name + " is " + nearest_mile + " away.";
                 }
                 if (roles[i].username == "WEINERMOBILE") {
                     weinermobile_status = "The Weinermobile is " + distance + " miles from me !";
