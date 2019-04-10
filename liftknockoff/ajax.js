@@ -67,6 +67,9 @@ function getOtherLocations() {
             var roles;
             var role_icon;
 
+            if (arr.length == 0)
+                return;
+
             if ("vehicles" in arr) {
                 role_name = "vehicle";
                 roles = arr.vehicles;
@@ -76,7 +79,7 @@ function getOtherLocations() {
                 roles = arr.passengers;
                 role_icon = "icons/passenger.png";
             } else {
-                alert("JSON data is wrong!")
+                alert("JSON data is wrong!");
             };
 
             var markers = new Array([roles.length]);
