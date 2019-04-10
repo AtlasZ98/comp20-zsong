@@ -57,7 +57,7 @@ function renderMap() {
 
 
 function getOtherLocations() {
-    request.open("POST", "https://hans-moleman.herokuapp.com/rides", true);
+    request.open("POST", "https://secure-journey-64999.herokuapp.com/rides", true);
     request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     request.onreadystatechange = function() {
         if (request.readyState == 4 && request.status == 200) {
