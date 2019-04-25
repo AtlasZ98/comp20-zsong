@@ -1,33 +1,14 @@
-#p1-1 {
-    width:  50%;
-    height: 50%;
+.screenshot {
+    width:  60%;
+    height: 60%;
 }
 
 #p1-2 {
-    width:  30%;
-    height: 30%;
+    width:  40%;
+    height: 40%;
 }
 
-#p2-1 {
-    width:  50%;
-    height: 50%;
-}
-
-#p2-2 {
-    width:  50%;
-    height: 50%;
-}
-
-#p3-1 {
-    width:  50%;
-    height: 50%;
-}
-
-#p3-2 {
-    width:  50%;
-    height: 50%;
-}
 
 p {
-    text-align: justify;
+    text-align: left;
 }

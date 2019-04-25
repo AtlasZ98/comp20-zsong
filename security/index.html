@@ -26,22 +26,22 @@
   <h3>Issues Found</h3>
     <h4>1. The client-side web page inherently doesn't work for drivers.</h4>
         <p>Use case: curl --data "username=FQ4DubnJ&lat=10&lng=10" mysterious-dawn-83421.herokuapp.com/rides</p>
-        <div id="screenshot"><img id="p1-1" src="screenshots/Issue1-1.png" alt="Issue 1 screenshot"></div>
-        <div id="screenshot"><img id="p1-2" src="screenshots/Issue1-2.jpeg" alt="Issue 1 screenshot"></div>
+        <img class="screenshot" id="p1-1" src="screenshots/Issue1-1.png" alt="Issue 1 screenshot">
+        <img class="screenshot" id="p1-2" src="screenshots/Issue1-2.jpeg" alt="Issue 1 screenshot">
         <p>This is the only document in passengers collection. And the first screenshot was the result when the username was JANET, a driver username. The website failed to process the correct JSON sent back by the server. After inspecting the code of the client-side web page, I found that even when placing passengers onto the map, the javascript was still trying to access "rideRequests.vehicles[i]", which is undefined because there was only rideRequests.passengers[i].</p>
 
     <h4>2. Passengers can get all the drivers' information without providing any valid data. No type-checking for POST request data. username, lat, and lnt could be actually sent empty. Passengers can hide themselves from the map.</h4>
         <p> Use case: curl --data "username[$gt]=&lat[$gt]=&lng[$gt]=" http://mysterious-dawn-83421.herokuapp.com/rides </p>
         <p> Use case: curl --data "username[$gt]=&lat=10&lng=-10" http://mysterious-dawn-83421.herokuapp.com/rides</p>
         <p> Use case: curl --data "username=wef&lat[$gt]=&lng=1-0" http://mysterious-dawn-83421.herokuapp.com/rides </p>
-        <div id="screenshot"><img id="p2-1" src="screenshots/Issue2-1.png" alt="Issue 2 screenshot"></div>
-        <div id="screenshot"><img id="p2-2" src="screenshots/Issue2-2.png" alt="Issue 2 screenshot"></div>
+        <img class="screenshot" id="p2-1" src="screenshots/Issue2-1.png" alt="Issue 2 screenshot">
+        <img class="screenshot" id="p2-2" src="screenshots/Issue2-2.png" alt="Issue 2 screenshot">
         <p> Since the product is using Google Map Mark API, having empty lat/lng didn't not crash the Javascript (my guess is that Google API has really good error handling with incorrect instantiation of objects), but then the problem is a passenger could actually prevent their marker from being displayed by making either one of the username, lat and lng empty. However, they still get away with all the drivers' geolocation. Different from having an username of "", this actually wipes off the marker of the passenger from the google map. As the first screenshot of this section shows, there is no passenger marker on the map even though there are documents in the database.</p>
 
     <h4>3. Cross-site scripting vulnerability. At the landing page of the server, mysterious-dawn-83421.herokuapp.com, all of the driver activity is displayed and the information is retrieved from the database. By putting in the json that contains the script into mongodb, when the script is retrieved and appended to the page, it gets rendered and executed. </h4>
-        <p>Use case: --data "username=JANET&lat=10&lng=&ltscript&gtalert('hacked')&lt/script&gt" http://mysterious-dawn-83421.herokuapp.com/rides</p>
-        <div id="screenshot"><img id="p3-1" src="screenshots/Issue3-1.jpeg" alt="Issue 3 screenshot"></div>
-        <div id="screenshot"><img id="p3-2" src="screenshots/Issue3-2.png" alt="Issue 3 screenshot"></div>
+        <p>Use case: --data "username=JANET&lat=10&lng=&lt;script&gt;alert('hacked')&lt;/script&gt;" http://mysterious-dawn-83421.herokuapp.com/rides</p>
+        <img class="screenshot" id="p3-1" src="screenshots/Issue3-1.jpeg" alt="Issue 3 screenshot">
+        <img class="screenshot" id="p3-2" src="screenshots/Issue3-2.png" alt="Issue 3 screenshot">
         <p>As it shows, it's hacked.</p>
 
   <h3>Conclusion</h3>
