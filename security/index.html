@@ -4,29 +4,52 @@
 
 <head>
   <title>Security Assessment</title>
+  <link rel="stylesheet" href="style.css"/>
   <meta charset="utf-8" />
 </head>
 
 <body>
 
-    
-  <h1>Security Assessment for mysterious-dawn-83421</h1>
+
+  <h1>Security Assessment to <mark>mysterious-dawn-83421.herokuapp.com</mark></h1>
   <h2>By Ziyu Song</h2>
 
   <h3>Introduction</h3>
     <p>The product being tested contains both client-side web pages and server-side node.js web server application. The purpose of the work summarized here is to access the security and privacy vulnerabilities of the product. The accessment is done by intentionally sending undesired data to the server using either browser or external tools.</p>
 
   <h3>Methodology</h3>
+    <p>Different requests were sent to the server, which process and stores the data and send it back to the client. Some of those query strings contains wrong types or mallicious scripts that either intend to crash the server or the client, or steal information that should not be accessed by any third party. Curl and Burp Suite were the external tools I used to aseess the vulnerabilities.</p>
 
   <h3>Abstract of Findings</h3>
+    <p>The server does not have effective type checking of client-sent key-value pairs before inserting them into database. </p>
 
   <h3>Issues Found</h3>
+    <h4>1. The client-side web page inherently doesn't work for drivers.</h4>
+        <p>Use case: curl --data "username=FQ4DubnJ&lat=10&lng=10" mysterious-dawn-83421.herokuapp.com/rides</p>
+        <div id="screenshot"><img id="p1-1" src="screenshots/Issue1-1.png" alt="Issue 1 screenshot"></div>
+        <div id="screenshot"><img id="p1-2" src="screenshots/Issue1-2.jpeg" alt="Issue 1 screenshot"></div>
+        <p>This is the only document in passengers collection. And the first screenshot was the result when the username was JANET, a driver username. The website failed to process the correct JSON sent back by the server. After inspecting the code of the client-side web page, I found that even when placing passengers onto the map, the javascript was still trying to access "rideRequests.vehicles[i]", which is undefined because there was only rideRequests.passengers[i].</p>
+
+    <h4>2. Passengers can get all the drivers' information without providing any valid data. No type-checking for POST request data. username, lat, and lnt could be actually sent empty. Passengers can hide themselves from the map.</h4>
+        <p> Use case: curl --data "username[$gt]=&lat[$gt]=&lng[$gt]=" http://mysterious-dawn-83421.herokuapp.com/rides </p>
+        <p> Use case: curl --data "username[$gt]=&lat=10&lng=-10" http://mysterious-dawn-83421.herokuapp.com/rides</p>
+        <p> Use case: curl --data "username=wef&lat[$gt]=&lng=1-0" http://mysterious-dawn-83421.herokuapp.com/rides </p>
+        <div id="screenshot"><img id="p2-1" src="screenshots/Issue2-1.png" alt="Issue 2 screenshot"></div>
+        <div id="screenshot"><img id="p2-2" src="screenshots/Issue2-2.png" alt="Issue 2 screenshot"></div>
+        <p> Since the product is using Google Map Mark API, having empty lat/lng didn't not crash the Javascript (my guess is that Google API has really good error handling with incorrect instantiation of objects), but then the problem is a passenger could actually prevent their marker from being displayed by making either one of the username, lat and lng empty. However, they still get away with all the drivers' geolocation. Different from having an username of "", this actually wipes off the marker of the passenger from the google map. As the first screenshot of this section shows, there is no passenger marker on the map even though there are documents in the database.</p>
+
+    <h4>3. Cross-site scripting vulnerability. At the landing page of the server, mysterious-dawn-83421.herokuapp.com, all of the driver activity is displayed and the information is retrieved from the database. By putting in the json that contains the script into mongodb, when the script is retrieved and appended to the page, it gets rendered and executed. </h4>
+        <p>Use case: --data "username=JANET&lat=10&lng=&ltscript&gtalert('hacked')&lt/script&gt" http://mysterious-dawn-83421.herokuapp.com/rides</p>
+        <div id="screenshot"><img id="p3-1" src="screenshots/Issue3-1.jpeg" alt="Issue 3 screenshot"></div>
+        <div id="screenshot"><img id="p3-2" src="screenshots/Issue3-2.png" alt="Issue 3 screenshot"></div>
+        <p>As it shows, it's hacked.</p>
 
   <h3>Conclusion</h3>
+    <p>The product has errors in client-side javascipt code, which means it doesn't have all the functionality promised. </p>
+    <p>The product is good at preventing simply database injections to /passengers.json because the server does use monggodb command db.collection.find() but passes in no parameters. It turns all the entries in the database into an array and uses javascript == operand to actually find the matching usernames. I tried mnay ways to bypass the == operand but wasn't able to do it.</p>
 
   <h3>References</h3>
-
-
+    <p>Tried to use Burp Suite but I did not find it particularly useful to the vulnerabilities I discovered. https://support.portswigger.net/customer/en/portal/articles/1783066-configuring-firefox-to-work-with-burp</p>
 
 
 </body>
