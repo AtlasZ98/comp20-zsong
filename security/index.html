@@ -43,10 +43,14 @@
         <img class="screenshot" id="p3-1" src="screenshots/Issue3-1.jpeg" alt="Issue 3 screenshot">
         <img class="screenshot" id="p3-2" src="screenshots/Issue3-2.png" alt="Issue 3 screenshot">
         <p>As it shows, it's hacked.</p>
-
+    <h4>4. Server code includes bad programming practice but honestly an very effective way against database injection.</h4>
+        <p> The server code for requests to '\passenger.json', which query for users and could be database injection attempts, were block by this practice:</p>
+        <img class="screenshot" id="p4-1" src="screenshots/Issue4-1.jpg" alt="Issue 4 screenshot">
+        <p> It prevents all kinds of database injection to this address because there is no argument passed into database find() function. The server dumps all documents from MongoDB and does the finding by doing javascript "==" comparison. Even not a typed language, so far I haven't been able to fooled any == operand so I think it's a very safe practice. However, from the scalablity point of view, I see this could be a bad programming practice given the size of a collection in a database could be huge. This implementation could easily make the host machine runs out of memory when turning the collection into an array.</p>
   <h3>Conclusion</h3>
-    <p>The product has errors in client-side javascipt code, which means it doesn't have all the functionality promised. </p>
-    <p>The product is good at preventing simply database injections to /passengers.json because the server does use monggodb command db.collection.find() but passes in no parameters. It turns all the entries in the database into an array and uses javascript == operand to actually find the matching usernames. I tried mnay ways to bypass the == operand but wasn't able to do it.</p>
+    <p>The application has errors in client-side javascipt code, which means it doesn't have all the functionality promised. </p>
+    <p> The application has no protection against cross-site scripting at the root address.
+    <p>The application is good at preventing simply database injections to /passengers.json because the server does use monggodb command db.collection.find() but passes in no parameters. It turns all the entries in the database into an array and uses javascript == operand to actually find the matching usernames. I tried mnay ways to bypass the == operand but wasn't able to do it.</p>
 
   <h3>References</h3>
     <p>Tried to use Burp Suite but I did not find it particularly useful to the vulnerabilities I discovered. https://support.portswigger.net/customer/en/portal/articles/1783066-configuring-firefox-to-work-with-burp</p>
